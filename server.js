@@ -10,7 +10,6 @@ const INITIAL = "INITIAL";
 const REGISTERED = "REGISTERED";
 
 const app = express();
-const proxy = require("http-proxy-middleware");
 const salt = parseInt(process.env.JWT_SALT);
 
 app.use(

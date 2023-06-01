@@ -6,13 +6,12 @@ const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
-const salt = 10;
 const INITIAL = "INITIAL";
 const REGISTERED = "REGISTERED";
 
 const app = express();
-
 const proxy = require("http-proxy-middleware");
+const salt = parseInt(process.env.JWT_SALT);
 
 app.use(
   cors({
@@ -79,7 +78,10 @@ app.post("/initRegister", (req, res) => {
   const sql =
     "INSERT INTO Users (uid, email, firstName, lastName, status, password ) VALUES (?)";
   bcrypt.hash(req.body.password.toString(), salt, (err, hash) => {
-    if (err) return res.json({ status: "Error hashing password" });
+    if (err) {
+      console.log("Error: ", err);
+      return res.json({ status: "Error hashing password" });
+    }
     const uid = crypto.randomUUID();
     const values = [
       uid,
